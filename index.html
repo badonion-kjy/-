@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>말없이 들어주는 친구들</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            background-color: #f7f4ef;
+            color: #4a403a;
+            user-select: none;
+            overflow-x: hidden;
+        }
+        .font-jua {
+            font-family: 'Jua', sans-serif;
+        }
+        
+        /* Custom Image Asset Overrides (You can replace URLs with your image paths) */
+        :root {
+            --title-bg-img: url('https://placehold.co/1200x800/fff7ed/ea580c?text=Title+Background');
+            --house-bg-img: url('https://placehold.co/800x600/fef3c7/b45309?text=House+Background');
+            --cafe-bg-img: url('https://placehold.co/800x600/292524/f59e0b?text=Cafe+Background');
+            --table-img: url('https://placehold.co/600x150/78350f/fbbf24?text=Cafe+Table');
+        }
+
+        /* Soft Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Pulse Soft */
+        @keyframes softPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+        .animate-soft-pulse {
+            animation: softPulse 2s ease-in-out infinite;
+        }
+
+        /* Celebration Fireworks / Rays Animation */
+        @keyframes fanfareGlow {
+            0% { transform: scale(0.8) rotate(0deg); opacity: 0.5; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0.8) rotate(360deg); opacity: 0.5; }
+        }
+        .animate-fanfare-glow {
+            animation: fanfareGlow 6s linear infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1ebd9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4c5b3;
+            border-radius: 4px;
+        }
+
+        /* Googly Eye Expressions */
+        .eye-pupil {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Expanded 50 Emotions CSS Animations */
+        @keyframes bounceActive {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-18px) scale(1.08) rotate(3deg); }
+        }
+        @keyframes leanInFocus {
+            0% { transform: translateY(0) scale(1) rotate(0deg); }
+            100% { transform: translateY(14px) scale(1.12) rotate(-3deg); }
+        }
+        @keyframes trembleAnxiety {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-4px) rotate(-2deg); }
+            40% { transform: translateX(4px) rotate(2deg); }
+            60% { transform: translateX(-3px); }
+            80% { transform: translateX(3px); }
+        }
+        @keyframes nodEmpathy {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            30% { transform: translateY(12px) rotate(2deg); }
+            60% { transform: translateY(4px) rotate(-1deg); }
+        }
+        @keyframes shySway {
+            0%, 100% { transform: rotate(0deg) scale(0.98); }
+            50% { transform: rotate(-8deg) scale(0.95) translateY(6px); }
+        }
+        @keyframes angerPuff {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15) rotate(4deg); }
+        }
+        @keyframes proudChest {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.08); }
+            100% { transform: translateY(-4px) scale(1.05); }
+        }
+        @keyframes sleepYawn {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(5deg) scale(0.96) translateY(8px); }
+        }
+
+        .anim-bounce { animation: bounceActive 0.7s ease-in-out infinite; }
+        .anim-lean-in { animation: leanInFocus 0.6s ease-out forwards; }
+        .anim-tremble { animation: trembleAnxiety 0.4s ease-in-out infinite; }
+        .anim-nod { animation: nodEmpathy 1.2s ease-in-out infinite; }
+        .anim-shy { animation: shySway 1.8s ease-in-out infinite; }
+        .anim-puff { animation: angerPuff 0.8s ease-in-out infinite; }
+        .anim-proud { animation: proudChest 1.2s ease-out forwards; }
+        .anim-sleepy { animation: sleepYawn 2.5s ease-in-out infinite; }
+
+        /* Head Sway Walking Animation */
+        @keyframes headSway {
+            0%, 100% { transform: rotate(0deg) translateY(0); }
+            25% { transform: rotate(-6deg) translateY(-4px); }
+            75% { transform: rotate(6deg) translateY(-4px); }
+        }
+        .anim-sway-walk {
+            animation: headSway 0.6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between relative bg-amber-50/40 overflow-hidden">
+
+    <!-- Header Bar (Always visible in Main Game) -->
+    <header id="top-bar" class="hidden absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-30 bg-white/60 backdrop-blur-md border-b border-amber-100">
+        <div class="flex items-center space-x-2">
+            <span class="font-jua text-xl text-amber-800">합숙집</span>
+            <span id="save-slot-indicator" class="text-xs bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full font-bold">슬롯 #1</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <!-- API Key Button Removed as it is no longer required -->
+            <button onclick="openDexModal()" title="친구 도감" class="p-2 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-full transition shadow-sm flex items-center gap-1 px-3">
+                <i data-lucide="book-open" class="w-5 h-5"></i>
+                <span class="font-jua text-sm hidden sm:inline">친구 도감</span>
+            </button>
+            <button onclick="confirmExitToTitle()" title="처음으로" class="p-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-full transition shadow-sm">
+                <i data-lucide="home" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- PAGE 1: TITLE SCREEN -->
+    <section id="screen-title" class="w-full h-full flex flex-col items-center justify-between py-12 px-6 text-center z-10 bg-cover bg-center" style="background-image: var(--title-bg-img);">
+        <div class="mt-8 flex flex-col items-center max-w-2xl bg-white/70 p-6 rounded-3xl backdrop-blur-sm border border-amber-200/60 shadow-xl">
+            <!-- Custom Title Image or Text Header -->
+            <div id="title-image-container" class="mb-4">
+                <h1 class="font-jua text-5xl md:text-7xl text-amber-950 tracking-wider drop-shadow-md">
+                    말없이 들어주는 친구들
+                </h1>
+            </div>
+            <!-- Custom Subtitle Image or Text Subtitle -->
+            <div id="subtitle-image-container">
+                <p class="text-base md:text-lg text-amber-900/90 leading-relaxed font-medium">
+                    "힘든 일과 기쁜 일 모든 일을 아무 말 없이 받아주고<br>
+                    공감해주어 같이 성장하는 친구"
+                </p>
+            </div>
+        </div>
+
+        <div class="my-4 animate-float">
+            <div class="w-36 h-36 md:w-48 md:h-48 rounded-full bg-amber-200/80 flex items-center justify-center border-4 border-white shadow-xl overflow-hidden">
+                <img id="title-main-char-img" src="https://placehold.co/200x200/fbbf24/78350f?text=Main+Friends" alt="친구들 대표 이미지" class="w-full h-full object-cover">
+            </div>
+        </div>
+
+        <div class="w-full max-w-xs mb-8">
+            <button onclick="goToSaveSelect()" class="w-full py-4 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-jua text-2xl rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2">
+                <i data-lucide="play" class="w-7 h-7 fill-current"></i>
+                시작하기
+            </button>
+        </div>
+    </section>
+
+    <!-- PAGE 2: SAVE SELECT SCREEN -->
+    <section id="screen-saves" class="hidden w-full h-full flex flex-col items-center justify-center p-6 z-10">
+        <div class="w-full max-w-md bg-white/80 backdrop-blur-md p-6 rounded-3xl shadow-xl border border-amber-100 flex flex-col h-[80vh]">
+            <h2 class="font-jua text-2xl text-amber-900 text-center mb-2">저장 데이터 선택</h2>
+            <p class="text-xs text-stone-500 text-center mb-6">이어하시거나 새로운 친구와의 집을 만들어보세요.</p>
+            <div id="save-slots-container" class="flex-1 space-y-3 overflow-y-auto pr-1"></div>
+            <button onclick="showScreen('screen-title')" class="mt-4 w-full py-3 bg-stone-200 hover:bg-stone-300 text-stone-700 font-jua text-lg rounded-xl transition">
+                돌아가기
+            </button>
+        </div>
+    </section>
+
+    <!-- PAGE 3: CHARACTER CREATION / SELECTION -->
+    <section id="screen-char-select" class="hidden w-full h-full flex flex-col items-center justify-between p-6 z-10">
+        <div class="mt-6 text-center">
+            <h2 class="font-jua text-3xl text-amber-900 mb-1">새로운 합숙 친구 선택</h2>
+            <p class="text-xs text-amber-700">함께 지낼 동물의 종류를 선택하고 직접 이름을 지어주세요.</p>
+        </div>
+
+        <div class="w-full max-w-sm flex items-center justify-between my-auto">
+            <button onclick="prevCharPreset()" class="p-3 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-full transition shadow">
+                <i data-lucide="chevron-left" class="w-6 h-6"></i>
+            </button>
+
+            <div id="char-card" class="flex-1 mx-4 bg-white/90 rounded-3xl p-6 shadow-xl border-2 border-amber-200 flex flex-col items-center text-center transition-all duration-300">
+                <div class="w-32 h-32 rounded-full bg-amber-100 flex items-center justify-center mb-4 shadow-inner border-2 border-amber-300 overflow-hidden">
+                    <img id="char-preset-img" src="https://placehold.co/150x150/fef3c7/b45309?text=Cat" alt="캐릭터 이미지" class="w-full h-full object-cover">
+                </div>
+                <h3 id="char-species-title" class="font-jua text-3xl text-amber-900 mb-4">고양이</h3>
+
+                <div class="w-full text-left">
+                    <label class="text-xs font-bold text-amber-800 mb-1 block">내가 정해줄 이름 (최대 20자):</label>
+                    <input type="text" id="char-name-input" maxlength="20" placeholder="이름을 직접 입력하세요" class="w-full px-3 py-2 bg-amber-50/50 border border-amber-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <p id="name-error-msg" class="text-[11px] text-red-500 mt-1 hidden"></p>
+                </div>
+            </div>
+
+            <button onclick="nextCharPreset()" class="p-3 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-full transition shadow">
+                <i data-lucide="chevron-right" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <div class="w-full max-w-xs mb-6">
+            <button onclick="confirmCharacterSelection()" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-jua text-xl rounded-2xl shadow-lg transition">
+                확정하기
+            </button>
+        </div>
+    </section>
+
+    <!-- PAGE 4: MAIN SHAREHOUSE (ROOM) -->
+    <section id="screen-house" class="hidden w-full h-full pt-16 pb-4 px-4 flex flex-col justify-between relative z-10 bg-amber-100/40">
+        <div class="w-full max-w-7xl mx-auto bg-white/90 backdrop-blur-md p-3.5 rounded-2xl shadow-md border border-amber-200 flex items-center justify-between z-20">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center border-2 border-amber-300 shadow-sm overflow-hidden">
+                    <img id="active-char-avatar-mini" src="https://placehold.co/50x50/fef3c7/b45309?text=Char" alt="친구 썸네일" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span id="active-char-name" class="font-jua text-lg text-amber-900">나비</span>
+                        <span id="active-char-level" class="text-xs bg-amber-500 text-white px-2.5 py-0.5 rounded-full font-bold">Lv.1</span>
+                    </div>
+                    <div class="w-36 bg-stone-200 h-2.5 rounded-full mt-1 overflow-hidden">
+                        <div id="active-char-xp-bar" class="bg-amber-500 h-full transition-all duration-500" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <span id="active-char-status" class="text-xs md:text-sm font-bold text-amber-800 bg-amber-100 px-4 py-1.5 rounded-full border border-amber-200 shadow-xs">
+                    거실 소파에서 쉬는 중...
+                </span>
+            </div>
+        </div>
+
+        <!-- WIDER SHAREHOUSE CONTAINER WITH SMALLER CHARACTER -->
+        <div class="flex-1 w-full max-w-7xl h-[62vh] max-h-[700px] min-h-[420px] mx-auto my-2 relative rounded-3xl border-4 border-amber-800/30 bg-cover bg-center shadow-2xl overflow-hidden flex flex-col justify-between p-4 md:p-6" style="background-image: var(--house-bg-img);">
+            <div class="h-1/2 flex gap-3 md:gap-4 border-b-2 border-amber-200/40 pb-2 md:pb-4">
+                <div class="flex-1 bg-amber-100/30 backdrop-blur-xs rounded-3xl p-3 md:p-5 border border-amber-200/50 relative shadow-inner">
+                    <span class="text-sm md:text-base font-bold text-amber-900 bg-white/80 px-3 md:px-4 py-1.5 md:py-2 rounded-full shadow-xs">🛌 침실</span>
+                </div>
+                <div class="w-2/5 bg-blue-50/30 backdrop-blur-xs rounded-3xl p-3 md:p-5 border border-blue-200/50 relative shadow-inner">
+                    <span class="text-sm md:text-base font-bold text-blue-900 bg-white/80 px-3 md:px-4 py-1.5 md:py-2 rounded-full shadow-xs">🧼 화장실</span>
+                </div>
+            </div>
+
+            <div class="h-1/2 flex gap-3 md:gap-4 pt-2 md:pt-4">
+                <div class="flex-1 bg-orange-100/30 backdrop-blur-xs rounded-3xl p-3 md:p-5 border border-orange-200/50 relative shadow-inner">
+                    <span class="text-sm md:text-base font-bold text-orange-900 bg-white/80 px-3 md:px-4 py-1.5 md:py-2 rounded-full shadow-xs">🛋️ 거실</span>
+                </div>
+                <div class="w-2/5 bg-emerald-50/30 backdrop-blur-xs rounded-3xl p-3 md:p-5 border border-emerald-200/50 relative shadow-inner">
+                    <span class="text-sm md:text-base font-bold text-emerald-900 bg-white/80 px-3 md:px-4 py-1.5 md:py-2 rounded-full shadow-xs">🍳 주방</span>
+                </div>
+            </div>
+
+            <!-- Smaller Character in House -->
+            <div id="house-char-container" onclick="openCharInteractionMenu()" class="absolute cursor-pointer transition-all duration-700 ease-in-out flex flex-col items-center group z-30">
+                <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white border-3 border-amber-400 shadow-xl flex items-center justify-center animate-float relative overflow-hidden">
+                    <img id="house-char-img" src="https://placehold.co/100x100/fef3c7/b45309?text=House+Char" alt="집안의 캐릭터" class="w-full h-full object-cover">
+                </div>
+                <!-- Changed location display to character nickname -->
+                <div id="house-status-bubble" class="mt-1 whitespace-nowrap bg-amber-900 text-white px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold shadow-md">
+                    나비
+                </div>
+            </div>
+
+            <!-- Independent Guests Container (Max 3) -->
+            <div id="dex-visitors-container" class="absolute inset-0 pointer-events-none z-30"></div>
+        </div>
+
+        <div class="text-center text-xs md:text-sm text-amber-900/80 font-medium z-10 mb-1">
+            넓어진 쉐어하우스에서 캐릭터를 누르면 1:1 대화하기 또는 프로필을 볼 수 있습니다.
+        </div>
+    </section>
+
+    <!-- PAGE 5: DRAMA-LIKE CAFE DIALOGUE SCREEN -->
+    <section id="screen-chat" class="hidden w-full h-full pt-16 flex flex-col justify-between relative z-10 bg-stone-900">
+        <!-- Top Right Actions: Single Sharehouse Return Button (Gear icon removed completely) -->
+        <div class="absolute top-4 right-4 z-40">
+            <button onclick="stopConversation()" title="합숙집으로 돌아가기" class="px-3.5 py-2 rounded-full bg-amber-600/90 hover:bg-amber-700 text-white backdrop-blur-md transition shadow-lg flex items-center gap-1.5 text-xs font-jua">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                <span>합숙집 돌아가기</span>
+            </button>
+        </div>
+
+        <!-- 3-Layer Scene View -->
+        <div class="flex-1 relative w-full h-full overflow-hidden flex flex-col justify-end">
+            
+            <!-- LAYER 1 (BOTTOM): Cafe Background Image -->
+            <div id="cafe-layer-bg" class="absolute inset-0 bg-cover bg-center z-0" style="background-image: var(--cafe-bg-img);"></div>
+            <div class="absolute inset-0 bg-black/30 z-0 pointer-events-none"></div>
+
+            <!-- LAYER 2 (MIDDLE): Character positioned lower behind table -->
+            <div id="cafe-layer-character" class="flex flex-col items-center justify-end relative z-10 -mb-6 md:-mb-8">
+                <div class="relative flex flex-col items-center">
+                    <!-- Clean single character image with fixed overlay structure -->
+                    <div id="chat-char-card" class="relative w-56 h-56 md:w-72 md:h-72 rounded-full border-4 border-amber-300 flex flex-col items-center justify-center shadow-2xl transition-all duration-500 overflow-hidden bg-amber-100">
+                        
+                        <!-- Single Clean Character View -->
+                        <img id="chat-char-img" src="https://placehold.co/250x250/fef3c7/b45309?text=Character" alt="카페 대화 캐릭터" class="w-full h-full object-cover">
+
+                        <!-- Custom Googly Eyes Overlay -->
+                        <div class="absolute top-14 md:top-20 flex space-x-7 md:space-x-10 z-20 pointer-events-none">
+                            <div class="w-9 h-9 md:w-11 md:h-11 bg-white rounded-full border-2 border-stone-800 flex items-center justify-center shadow-md overflow-hidden">
+                                <div id="left-pupil" class="eye-pupil w-4 h-4 md:w-5 md:h-5 bg-stone-900 rounded-full"></div>
+                            </div>
+                            <div class="w-9 h-9 md:w-11 md:h-11 bg-white rounded-full border-2 border-stone-800 flex items-center justify-center shadow-md overflow-hidden">
+                                <div id="right-pupil" class="eye-pupil w-4 h-4 md:w-5 md:h-5 bg-stone-900 rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <div id="emotion-effect-icon" class="absolute -top-4 text-3xl transition-all duration-300 opacity-0 scale-50 z-30"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LAYER 3 (TOP): Single Extended Cafe Table stretching wider & to bottom screen edge -->
+            <div id="cafe-layer-table" class="w-full h-44 md:h-52 z-20 flex justify-center items-end relative -mb-4">
+                <div class="w-full max-w-6xl h-full bg-cover bg-no-repeat bg-center relative flex justify-center items-start pt-3 shadow-2xl rounded-t-3xl border-t-4 border-amber-700/60" style="background-image: var(--table-img);">
+                    <!-- Coffee Cup Overlay -->
+                    <div id="table-cup-img" class="text-6xl md:text-7xl -mt-6 md:-mt-8 drop-shadow-xl select-none">☕</div>
+                </div>
+            </div>
+
+            <!-- Subtitle/Dialogue Box -->
+            <div class="w-full max-w-2xl mx-auto px-4 pb-2 z-30">
+                <div id="drama-speech-box" class="bg-black/75 backdrop-blur-md border border-amber-500/30 rounded-2xl p-4 md:p-5 shadow-2xl min-h-[90px] flex flex-col justify-center transition-all">
+                    <span id="drama-speaker-name" class="font-jua text-amber-400 text-sm md:text-base mb-1">포근이</span>
+                    <p id="drama-speech-text" class="text-white text-sm md:text-base leading-relaxed">
+                        "따뜻한 차를 마시며 이야기를 들을 준비가 되었어요. 편하게 이야기해 보세요."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 bg-stone-900 border-t border-amber-900/40 flex items-center gap-2 z-30">
+            <input type="text" id="chat-input" placeholder="마음속 이야기를 친구에게 건네보세요..." class="flex-1 px-4 py-3 bg-stone-800 text-white border border-amber-800/50 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button onclick="sendMessage()" class="p-3 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white rounded-2xl transition shadow">
+                <i data-lucide="send" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- NEW: HOUSEMATE WELCOME FANFARE MODAL -->
+    <div id="modal-housemate-welcome" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="relative bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-amber-300 overflow-hidden">
+            <!-- Background Fanfare Rays -->
+            <div class="absolute -inset-20 bg-gradient-to-r from-amber-300 via-orange-300 to-amber-200 opacity-20 rounded-full animate-fanfare-glow pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <div class="text-6xl mb-2 animate-bounce">🎉✨</div>
+                <span class="inline-block bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-3">축하합니다!</span>
+                <h3 class="font-jua text-3xl text-amber-950 mb-2">당신의 하우스메이트!</h3>
+                <div class="w-24 h-24 rounded-full bg-amber-100 border-4 border-amber-400 mx-auto my-3 overflow-hidden shadow-lg">
+                    <img id="welcome-char-img" src="" class="w-full h-full object-cover">
+                </div>
+                <h4 id="welcome-char-name" class="font-jua text-2xl text-amber-900 mb-2">포근이</h4>
+                <p class="text-xs text-stone-600 leading-relaxed mb-6 font-medium">
+                    새로운 하우스메이트와 함께 쉐어하우스 생활을 시작합니다! 마음을 털어놓으며 함께 성장해 봐요.
+                </p>
+                <button onclick="closeHousemateWelcomeModal()" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-jua text-lg rounded-2xl shadow-lg transition">
+                    반가워, 시작하자! ✨
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS SECTION -->
+    <div id="modal-char-menu" class="hidden fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-amber-100 animate-soft-pulse">
+            <div class="text-center mb-6">
+                <div class="w-20 h-20 rounded-full bg-amber-100 border-2 border-amber-300 flex items-center justify-center mx-auto mb-2 overflow-hidden">
+                    <img id="menu-modal-avatar-img" src="https://placehold.co/100x100/fef3c7/b45309?text=Menu" alt="메뉴 캐릭터" class="w-full h-full object-cover">
+                </div>
+                <h3 id="menu-modal-name" class="font-jua text-2xl text-amber-900">포근이</h3>
+                <p class="text-xs text-stone-500">어떤 활동을 할까요?</p>
+            </div>
+            
+            <div class="space-y-3">
+                <button onclick="startConversationFromMenu()" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-jua text-lg rounded-xl shadow transition flex items-center justify-center gap-2">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    대화하기 (1:1 카페)
+                </button>
+                <button onclick="openProfileDetailsModal()" class="w-full py-3 bg-amber-100 hover:bg-amber-200 text-amber-900 font-jua text-lg rounded-xl transition flex items-center justify-center gap-2">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                    프로필 & 배경 이야기
+                </button>
+                <button onclick="closeModal('modal-char-menu')" class="w-full py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-600 font-jua rounded-xl transition">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="modal-profile" class="hidden fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-amber-100 max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-jua text-2xl text-amber-900 flex items-center gap-2">
+                    <span>✨</span> <span id="profile-modal-title">친구 프로필</span>
+                </h3>
+                <button onclick="closeModal('modal-profile')" class="text-stone-400 hover:text-stone-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-sm">
+                <div class="grid grid-cols-2 gap-2 font-jua">
+                    <button onclick="showProfileTab('dream')" class="py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl transition">진로 & 꿈</button>
+                    <button onclick="showProfileTab('hobby')" class="py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl transition">취미</button>
+                    <button onclick="showProfileTab('food')" class="py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl transition">좋아하는 음식</button>
+                    <button onclick="showProfileTab('hate')" class="py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl transition">싫어하는 것</button>
+                </div>
+                <div id="profile-tab-content" class="bg-amber-50/70 p-4 rounded-2xl border border-amber-200 min-h-[140px]"></div>
+            </div>
+            
+            <button onclick="closeModal('modal-profile')" class="mt-4 w-full py-2.5 bg-amber-600 text-white font-jua rounded-xl hover:bg-amber-700 transition">
+                확인
+            </button>
+        </div>
+    </div>
+
+    <!-- XP Gain Modal -->
+    <div id="modal-xp-gain" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl border border-amber-100">
+            <div class="text-5xl mb-3">⭐</div>
+            <h3 class="font-jua text-2xl text-amber-900 mb-2">마음 소통 완수!</h3>
+            <p id="xp-gained-text" class="text-sm text-stone-600 mb-4">대화를 나누며 깊은 신뢰가 쌓였습니다.</p>
+            <button onclick="finishXpModal()" class="w-full py-2.5 bg-amber-600 text-white font-jua rounded-xl hover:bg-amber-700 transition">
+                확인
+            </button>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="modal-confirm" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl border border-amber-100">
+            <h3 id="confirm-title" class="font-jua text-2xl text-amber-900 mb-2">확인</h3>
+            <p id="confirm-msg" class="text-sm text-stone-600 mb-6">정말 진행하시겠습니까?</p>
+            <div class="flex space-x-2">
+                <button id="confirm-no-btn" class="flex-1 py-2.5 bg-stone-200 hover:bg-stone-300 text-stone-700 font-jua rounded-xl transition">
+                    아니오
+                </button>
+                <button id="confirm-yes-btn" class="flex-1 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-jua rounded-xl transition">
+                    예
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Independence Modal -->
+    <div id="modal-independence" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full text-center shadow-2xl border border-amber-100">
+            <div class="text-6xl mb-3 animate-bounce">🎓✨</div>
+            <h3 class="font-jua text-3xl text-amber-900 mb-2">소중한 독립의 시간</h3>
+            <p id="independence-desc" class="text-sm text-stone-600 mb-6 leading-relaxed font-medium">
+                <!-- Random emotional message loaded here -->
+            </p>
+            <button onclick="startNewFriendAfterIndependence()" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-jua text-lg rounded-2xl shadow transition">
+                새로운 친구 맞이하기
+            </button>
+        </div>
+    </div>
+
+    <!-- Dex / Album Modal -->
+    <div id="modal-dex" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-amber-100 max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-jua text-2xl text-amber-900 flex items-center gap-2">
+                    <span>📖</span> <span>독립한 친구 앨범 (도감)</span>
+                </h3>
+                <button onclick="closeModal('modal-dex')" class="text-stone-400 hover:text-stone-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <input type="text" id="dex-search-input" onkeyup="renderDexList()" placeholder="독립생 친구 이름 검색..." class="w-full px-4 py-2 bg-amber-50 border border-amber-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+            </div>
+
+            <div id="dex-list-container" class="flex-1 overflow-y-auto space-y-3 pr-1"></div>
+
+            <button onclick="closeModal('modal-dex')" class="mt-4 w-full py-2.5 bg-stone-200 text-stone-700 font-jua rounded-xl hover:bg-stone-300 transition">
+                닫기
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC FIX & INITIALIZATION -->
+    <script>
+        // Preset Character Templates
+        const CHAR_PRESETS = [
+            { id: 'cat', species: '고양이', img: 'https://placehold.co/200x200/fef3c7/b45309?text=Cat' },
+            { id: 'bear', species: '곰', img: 'https://placehold.co/200x200/ffedd5/c2410c?text=Bear' },
+            { id: 'bunny', species: '토끼', img: 'https://placehold.co/200x200/fce7f3/be185d?text=Bunny' }
+        ];
+
+        // 50 EMOTIONS DATABASE
+        const EMOTIONS_DB = {
+            joy: { id: 1, name: '기쁨', priority: 3, icon: '😊🎉', anim: 'anim-bounce', eye: 'happy', text: ['활짝 웃으며 신나게 바운스합니다!', '눈을 반달 모양으로 만들며 환하게 웃어 줍니다.'] },
+            excited: { id: 2, name: '신남', priority: 4, icon: '🥳✨', anim: 'anim-bounce', eye: 'happy', text: ['몸을 좌우로 흔들며 기쁨의 춤을 춥니다!', '신이 나서 제자리에서 통통 튑니다.'] },
+            proud: { id: 3, name: '뿌듯함', priority: 2, icon: '🏆🌟', anim: 'anim-proud', eye: 'happy', text: ['가슴을 당당히 펴고 으쓱해하며 당신을 축하합니다.'] },
+            relief: { id: 4, name: '안도감', priority: 2, icon: '😮‍💨🌿', anim: 'anim-nod', eye: 'comfort', text: ['몸의 긴장을 사르르 풀며 조용히 미소 짓습니다.'] },
+            affection: { id: 5, name: '애정', priority: 3, icon: '💖🥰', anim: 'anim-lean-in', eye: 'touched', text: ['부드러운 시선으로 몸을 기울여 다정하게 바라봅니다.'] },
+            playful: { id: 6, name: '장난스러움', priority: 2, icon: '😜🎈', anim: 'anim-bounce', eye: 'wink', text: ['귀엽게 윙크하며 고개를 까딱거립니다.'] },
+            serenity: { id: 7, name: '평온함', priority: 1, icon: '☕🍃', anim: 'anim-nod', eye: 'comfort', text: ['편안한 표정으로 잔잔히 고개를 깜빡입니다.'] },
+            gratitude: { id: 8, name: '고마움', priority: 3, icon: '🙏💐', anim: 'anim-nod', eye: 'touched', text: ['고개를 다정히 숙여 고마운 마음을 전합니다.'] },
+            hope: { id: 9, name: '희망', priority: 3, icon: '🌠✨', anim: 'anim-proud', eye: 'happy', text: ['고개를 들고 반짝이는 눈으로 밝은 미래를 봅니다.'] },
+            satisfaction: { id: 10, name: '만족감', priority: 2, icon: '🙂☕', anim: 'anim-nod', eye: 'comfort', text: ['만족스러운 듯 고개를 끄덕이며 찻잔을 바라봅니다.'] },
+            sadness: { id: 11, name: '슬픔', priority: 3, icon: '💧🥺', anim: 'anim-shy', eye: 'comfort', text: ['고개를 살며시 숙이고 함께 안타까워합니다.'] },
+            anger: { id: 12, name: '분노', priority: 4, icon: '🔥😡', anim: 'anim-puff', eye: 'surprised', text: ['당신의 억울함에 대신 볼을 부풀리며 분노합니다!'] },
+            anxiety: { id: 13, name: '불안', priority: 3, icon: '😰💦', anim: 'anim-tremble', eye: 'shy', text: ['걱정스럽게 조심스레 손을 꼼지락거리며 곁을 지킵니다.'] },
+            worry: { id: 14, name: '걱정', priority: 3, icon: '😟🌿', anim: 'anim-lean-in', eye: 'comfort', text: ['눈썹을 모으고 걱정스러운 눈빛으로 귀를 기울입니다.'] },
+            disappointment: { id: 15, name: '실망', priority: 2, icon: '😞☁️', anim: 'anim-shy', eye: 'shy', text: ['어깨를 살짝 내리고 당신의 헛헛함을 이해해 줍니다.'] },
+            frustration: { id: 16, name: '답답함', priority: 3, icon: '😤💨', anim: 'anim-puff', eye: 'surprised', text: ['함께 답답한 듯 숨을 내쉬며 당신 편을 듭니다.'] },
+            loneliness: { id: 17, name: '외로움', priority: 3, icon: '🌙🫂', anim: 'anim-lean-in', eye: 'comfort', text: ['혼자가 아니라는 듯 조용히 다가와 곁에 안깁니다.'] },
+            shame: { id: 18, name: '부끄러움', priority: 3, icon: '😳🌸', anim: 'anim-shy', eye: 'shy', text: ['볼이 발그레해지며 고개를 살짝 돌립니다.'] },
+            guilt: { id: 19, name: '죄책감', priority: 2, icon: '😔💧', anim: 'anim-shy', eye: 'shy', text: ['시선을 내리고 부드럽게 당신을 다독입니다.'] },
+            fatigue: { id: 20, name: '지침', priority: 2, icon: '🥱💤', anim: 'anim-sleepy', eye: 'comfort', text: ['몸을 축 늘어뜨리며 푹 쉬어도 된다고 말없이 전합니다.'] },
+            curiosity: { id: 21, name: '궁금함', priority: 2, icon: '❓🧐', anim: 'anim-lean-in', eye: 'tilt_left', text: ['고개를 좌우로 기울이며 눈을 동그랗게 뜹니다.'] },
+            focus: { id: 22, name: '관심과 집중', priority: 1, icon: '👀💡', anim: 'anim-lean-in', eye: 'normal', text: ['당신을 향해 깊이 몰입하며 이야기를 듣습니다.'] },
+            surprise: { id: 23, name: '놀라움', priority: 4, icon: '😲⚡', anim: 'anim-bounce', eye: 'surprised', text: ['눈을 크게 뜨고 깜짝 놀라며 귀를 쫑긋합니다!'] },
+            confusion: { id: 24, name: '혼란스러움', priority: 2, icon: '🌀🤔', anim: 'anim-shy', eye: 'tilt_left', text: ['고개를 갸웃거리며 다시금 집중합니다.'] },
+            thinking: { id: 25, name: '생각에 잠김', priority: 2, icon: '💭🌌', anim: 'anim-nod', eye: 'tilt_right', text: ['위쪽을 바라보며 깊은 생각에 들어갑니다.'] },
+            admiration: { id: 26, name: '감탄', priority: 3, icon: '👏✨', anim: 'anim-bounce', eye: 'surprised', text: ['눈을 반짝이며 감탄의 시선을 보냅니다!'] },
+            doubt: { id: 27, name: '의심', priority: 2, icon: '🤨🔍', anim: 'anim-shy', eye: 'tilt_left', text: ['한쪽 눈썹을 살짝 올리며 유심히 쳐다봅니다.'] },
+            seriousness: { id: 28, name: '진지함', priority: 2, icon: '📌💬', anim: 'anim-lean-in', eye: 'normal', text: ['자세를 바로 하고 대단히 진지하게 경청합니다.'] },
+            expectation: { id: 29, name: '기대감', priority: 3, icon: '🎁✨', anim: 'anim-lean-in', eye: 'happy', text: ['몸을 앞으로 바짝 기울이며 흥미진진해합니다.'] },
+            boredom: { id: 30, name: '지루함', priority: 1, icon: '🥱🎈', anim: 'anim-sleepy', eye: 'comfort', text: ['하품을 살짝 하며 편안히 몸을 흔듭니다.'] },
+            shyness: { id: 31, name: '수줍음', priority: 2, icon: '🙈💕', anim: 'anim-shy', eye: 'shy', text: ['몸을 움츠리며 살포시 미소 짓습니다.'] },
+            respect: { id: 32, name: '존경', priority: 3, icon: '🎖️✨', anim: 'anim-proud', eye: 'happy', text: ['깊은 존경의 눈빛으로 고개를 힘차게 끄덕입니다.'] },
+            jealousy: { id: 33, name: '질투', priority: 2, icon: '😗💨', anim: 'anim-puff', eye: 'tilt_left', text: ['귀엽게 볼을 부풀리며 삐친 모션을 취합니다.'] },
+            empathy: { id: 34, name: '공감', priority: 3, icon: '🤝🌿', anim: 'anim-nod', eye: 'comfort', text: ['부드럽게 바라보며 마음으로 공감합니다.'] },
+            encouragement: { id: 35, name: '격려', priority: 4, icon: '👍🔥', anim: 'anim-bounce', eye: 'happy', text: ['엄지를 척 올리듯 힘차게 응원을 보냅니다!'] },
+            teasing: { id: 36, name: '놀림', priority: 2, icon: '😜🎵', anim: 'anim-bounce', eye: 'wink', text: ['장난스럽게 웃으며 귀여운 농담을 건넵니다.'] },
+            apology: { id: 37, name: '미안함', priority: 2, icon: '🙇‍♂️💧', anim: 'anim-shy', eye: 'shy', text: ['고개를 살짝 숙이며 따뜻한 정성을 건넵니다.'] },
+            welcome: { id: 38, name: '반가움', priority: 4, icon: '🙋‍♂️🎉', anim: 'anim-bounce', eye: 'happy', text: ['손을 격렬히 흔들며 너무나 반가워합니다!'] },
+            soothing: { id: 39, name: '다독임', priority: 3, icon: '🧸💛', anim: 'anim-lean-in', eye: 'comfort', text: ['따스한 표정으로 토닥토닥 위로를 보냅니다.'] },
+            embarrassment: { id: 40, name: '민망함', priority: 2, icon: '😅💦', anim: 'anim-shy', eye: 'shy', text: ['시선을 피하며 긁적이는 흉내를 냅니다.'] },
+            determination: { id: 41, name: '결심', priority: 3, icon: '✊🔥', anim: 'anim-proud', eye: 'normal', text: ['단단한 각오로 의지 넘치게 고개를 끄덕입니다.'] },
+            hesitation: { id: 42, name: '망설임', priority: 2, icon: '🤔🐾', anim: 'anim-tremble', eye: 'tilt_left', text: ['움직이려다 잠시 멈추며 신중히 반응합니다.'] },
+            longing: { id: 43, name: '그리움', priority: 2, icon: '🌌🍂', anim: 'anim-nod', eye: 'comfort', text: ['아득한 먼 곳을 바라보며 조용히 추억합니다.'] },
+            daydream: { id: 44, name: '몽상', priority: 1, icon: '☁️🎨', anim: 'anim-sleepy', eye: 'tilt_right', text: ['멍하니 위쪽 구름을 바라보며 상상합니다.'] },
+            moved: { id: 45, name: '감동', priority: 4, icon: '🥺💖', anim: 'anim-bounce', eye: 'touched', text: ['눈물이 글썽일 듯 깊게 감동하여 바라봅니다.'] },
+            awkwardness: { id: 46, name: '어색함', priority: 2, icon: '🙃👀', anim: 'anim-shy', eye: 'tilt_left', text: ['눈동자를 좌우로 굴리며 쑥스러워합니다.'] },
+            impatience: { id: 47, name: '조급함', priority: 3, icon: '⏰💦', anim: 'anim-tremble', eye: 'surprised', text: ['발을 동동 구르듯 서두르며 집중합니다.'] },
+            drowsiness: { id: 48, name: '나른함', priority: 1, icon: '🍵💤', anim: 'anim-sleepy', eye: 'comfort', text: ['몸을 느슨하게 들썩이며 따뜻함에 취합니다.'] },
+            courage: { id: 49, name: '용기', priority: 3, icon: '🦁✨', anim: 'anim-proud', eye: 'happy', text: ['자세를 바로 세우며 용기를 불어넣어 줍니다.'] },
+            elation: { id: 50, name: '들뜸', priority: 4, icon: '🎈🥳', anim: 'anim-bounce', eye: 'happy', text: ['제자리에서 폴짝 뛰며 들뜬 마음을 함께합니다!'] }
+        };
+
+        function analyzeSentiment50(text) {
+            const t = text.toLowerCase().replace(/[^가-힣a-zA-Z0-9\s]/g, '');
+            let matchedEmotions = [];
+
+            // 1. 부정계열 감정 최우선 감지 (슬픔, 분노, 불안, 지침, 억울, 외로움, 실망, 자책)
+            if (/슬퍼|슬픔|눈물|울었|울음|속상|우울|보고싶|외로|혼자|실망|헛헛|죽겠|망했|절망|괴롭|괴로워|마음아파|아파|싫어|미워|자책|내자신/.test(t)) {
+                matchedEmotions = [EMOTIONS_DB.sadness, EMOTIONS_DB.soothing, EMOTIONS_DB.loneliness, EMOTIONS_DB.disappointment, EMOTIONS_DB.moved];
+            }
+            else if (/싸웠|싸움|화나|화났|짜증|열받|억울|시비|빡쳐|답답|때려치|열나|개짜증|미치겠/.test(t)) {
+                matchedEmotions = [EMOTIONS_DB.anger, EMOTIONS_DB.frustration, EMOTIONS_DB.empathy, EMOTIONS_DB.soothing];
+            }
+            // 1-1. 비속어/욕설 및 거친 표현 감지 (뜬금없는 훈훈한 공감 억제 -> 당황/상처/놀라움)
+            else if (/씨발|시발|존나|개새|미친|지랄|병신|꺼져|죽어|닥쳐|fuck|shit/.test(t)) {
+                matchedEmotions = [EMOTIONS_DB.surprise, EMOTIONS_DB.embarrassment, EMOTIONS_DB.anxiety, EMOTIONS_DB.seriousness];
+            }
+            else if (/피곤|지쳤|지쳐|힘들어|힘듦|졸려|나른|지옥|배고파|기진맥진|망가졌/.test(t)) {
+                matchedEmotions = [EMOTIONS_DB.fatigue, EMOTIONS_DB.drowsiness, EMOTIONS_DB.soothing, EMOTIONS_DB.empathy];
+            }
+            else if (/불안|걱정|떨려|무서|두려|어쩌지|어떡해|큰일|망했다|망했어/.test(t)) {
+                matchedEmotions = [EMOTIONS_DB.anxiety, EMOTIONS_DB.worry, EMOTIONS_DB.hesitation, EMOTIONS_DB.soothing];
+            }
+            else if (/부끄|쪽팔|창피|실수|어색|민망|당황|수줍/.test(t)) {
+                matchedEmotions = [EMOTIONS_DB.shame, EMOTIONS_DB.awkwardness, EMOTIONS_DB.shyness, EMOTIONS_DB.embarrassment];
+            }
+            // 2. 긍정계열 (기쁨, 신남, 들뜸, 뿌듯함, 희망, 안도, 고마움, 애정)
+            else if (/시험|100|백점|합격|성공|이겼|칭찬|선물|기쁘|기뻐|좋아|행복|신나|즐거|대박|해냈|뿌듯|자랑|다행|안심|살았다|고마|감사|덕분|사랑|좋아해/.test(t)) {
+                if (/해냈|뿌듯|자랑|100|합격|성공/.test(t)) {
+                    matchedEmotions = [EMOTIONS_DB.proud, EMOTIONS_DB.satisfaction, EMOTIONS_DB.elation, EMOTIONS_DB.joy];
+                } else if (/다행|안심|살았다/.test(t)) {
+                    matchedEmotions = [EMOTIONS_DB.relief, EMOTIONS_DB.serenity, EMOTIONS_DB.hope];
+                } else if (/고마|감사|덕분|사랑|좋아해/.test(t)) {
+                    matchedEmotions = [EMOTIONS_DB.gratitude, EMOTIONS_DB.affection, EMOTIONS_DB.moved];
+                } else {
+                    matchedEmotions = [EMOTIONS_DB.joy, EMOTIONS_DB.excited, EMOTIONS_DB.elation, EMOTIONS_DB.hope];
+                }
+            } 
+            // 3. 호기심/놀람/생각
+            else if (/갑자기|우와|진짜|깜짝|충격|놀라/.test(t)) {
+                matchedEmotions = [EMOTIONS_DB.surprise, EMOTIONS_DB.admiration, EMOTIONS_DB.curiosity];
+            } else if (/궁금|왜|무엇|어떻게|생각|고민/.test(t)) {
+                matchedEmotions = [EMOTIONS_DB.curiosity, EMOTIONS_DB.thinking, EMOTIONS_DB.confusion];
+            }
+            // 4. 일상 이야기 / 평온한 경청
+            else {
+                matchedEmotions = [EMOTIONS_DB.focus, EMOTIONS_DB.serenity, EMOTIONS_DB.empathy, EMOTIONS_DB.satisfaction];
+            }
+
+            const primary = matchedEmotions[Math.floor(Math.random() * matchedEmotions.length)];
+            const secondary = matchedEmotions[(Math.floor(Math.random() * matchedEmotions.length)) % matchedEmotions.length];
+
+            return [primary, secondary];
+        }
+
+        function set50EmotionMotion(primaryEmo, secondaryEmo) {
+            const card = document.getElementById('chat-char-card');
+            const leftPupil = document.getElementById('left-pupil');
+            const rightPupil = document.getElementById('right-pupil');
+            const effectIcon = document.getElementById('emotion-effect-icon');
+            const speechText = document.getElementById('drama-speech-text');
+
+            if (!card) return;
+
+            // Remove existing animation classes
+            card.classList.remove('anim-bounce', 'anim-lean-in', 'anim-tremble', 'anim-nod', 'anim-shy', 'anim-puff', 'anim-proud', 'anim-sleepy');
+            
+            // Add primary animation
+            void card.offsetWidth; // Trigger reflow
+            card.classList.add(primaryEmo.anim || 'anim-nod');
+
+            // Apply Eye Shapes
+            if (leftPupil && rightPupil) {
+                leftPupil.className = 'eye-pupil w-3.5 h-3.5 md:w-4 md:h-4 bg-stone-900 rounded-full';
+                rightPupil.className = 'eye-pupil w-3.5 h-3.5 md:w-4 md:h-4 bg-stone-900 rounded-full';
+
+                if (primaryEmo.eye === 'happy') {
+                    leftPupil.style.borderRadius = '50% 50% 0 0';
+                    rightPupil.style.borderRadius = '50% 50% 0 0';
+                } else if (primaryEmo.eye === 'surprised') {
+                    leftPupil.className += ' scale-150';
+                    rightPupil.className += ' scale-150';
+                } else if (primaryEmo.eye === 'comfort') {
+                    leftPupil.style.transform = 'scaleY(0.4)';
+                    rightPupil.style.transform = 'scaleY(0.4)';
+                } else if (primaryEmo.eye === 'shy') {
+                    leftPupil.style.transform = 'translateY(2px)';
+                    rightPupil.style.transform = 'translateY(2px)';
+                } else if (primaryEmo.eye === 'wink') {
+                    leftPupil.style.transform = 'scaleY(0.1)';
+                    rightPupil.style.transform = 'scale(1)';
+                } else if (primaryEmo.eye === 'tilt_left') {
+                    leftPupil.style.transform = 'translateX(-3px)';
+                    rightPupil.style.transform = 'translateX(-3px)';
+                } else if (primaryEmo.eye === 'tilt_right') {
+                    leftPupil.style.transform = 'translateX(3px)';
+                    rightPupil.style.transform = 'translateX(3px)';
+                } else {
+                    leftPupil.style.transform = 'none';
+                    rightPupil.style.transform = 'none';
+                }
+            }
+
+            // Show Effect Icon
+            if (effectIcon) {
+                effectIcon.textContent = primaryEmo.icon || '✨';
+                effectIcon.classList.remove('opacity-0', 'scale-50');
+                effectIcon.classList.add('opacity-100', 'scale-110');
+                setTimeout(() => {
+                    effectIcon.classList.remove('opacity-100', 'scale-110');
+                    effectIcon.classList.add('opacity-0', 'scale-50');
+                }, 2000);
+            }
+
+            // Update Drama Speech Subtitle Text
+            if (speechText) {
+                const randomMsgIndex = Math.floor(Math.random() * primaryEmo.text.length);
+                speechText.textContent = `"${primaryEmo.text[randomMsgIndex]}"`;
+            }
+        }
+
+        // Global State Management Variables
+        let currentSaveIndex = 0;
+        let savesData = [null, null, null, null, null];
+        let globalDex = []; // Shared global album for independent friends across saves
+        let activeVisitors = []; // Currently visiting independent friends (max 3)
+        let visitorTimers = {}; // Timers for random guest departure
+        let currentPresetIdx = 0;
+        let sessionDialogueCount = 0;
+        let currentChattingVisitor = null; // Track active independent guest in chat
+        let houseIdleTimer = null;
+
+        // Game Initialization Logic
+        window.onload = function() {
+            lucide.createIcons();
+            loadSavesFromStorage();
+            showScreen('screen-title');
+        };
+
+        function loadSavesFromStorage() {
+            try {
+                const savedSaves = localStorage.getItem('silent_friends_saves');
+                if (savedSaves) {
+                    savesData = JSON.parse(savedSaves);
+                }
+                const savedDex = localStorage.getItem('silent_friends_global_dex');
+                if (savedDex) {
+                    globalDex = JSON.parse(savedDex);
+                }
+            } catch(e) {
+                console.error("저장 데이터 로드 에러:", e);
+            }
+        }
+
+        function saveToStorage() {
+            try {
+                localStorage.setItem('silent_friends_saves', JSON.stringify(savesData));
+                localStorage.setItem('silent_friends_global_dex', JSON.stringify(globalDex));
+            } catch(e) {
+                console.error("저장 데이터 저장 에러:", e);
+            }
+        }
+
+        function showScreen(screenId) {
+            const screens = ['screen-title', 'screen-saves', 'screen-char-select', 'screen-house', 'screen-chat'];
+            screens.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            const target = document.getElementById(screenId);
+            if (target) target.classList.remove('hidden');
+
+            const topBar = document.getElementById('top-bar');
+            if (topBar) {
+                // Show top bar ONLY in the sharehouse screen, hide in cafe dialogue
+                if (screenId === 'screen-house') {
+                    topBar.classList.remove('hidden');
+                } else {
+                    topBar.classList.add('hidden');
+                }
+            }
+
+            if (screenId === 'screen-house') {
+                startHouseIdleLoop();
+            } else {
+                stopHouseIdleLoop();
+            }
+        }
+
+        function goToSaveSelect() {
+            renderSaveSlots();
+            showScreen('screen-saves');
+        }
+
+        function renderSaveSlots() {
+            const container = document.getElementById('save-slots-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            for (let i = 0; i < 5; i++) {
+                const slot = savesData[i];
+                const slotDiv = document.createElement('div');
+                slotDiv.className = "w-full p-4 rounded-2xl border flex items-center justify-between transition shadow-sm " +
+                    (slot ? "bg-amber-50 border-amber-300 hover:bg-amber-100/80" : "bg-stone-50 border-stone-200 hover:bg-stone-100");
+
+                if (slot) {
+                    slotDiv.innerHTML = `
+                        <div class="flex items-center space-x-3 cursor-pointer flex-1" onclick="selectSaveSlot(${i})">
+                            <div class="w-10 h-10 rounded-full bg-amber-200 border border-amber-400 overflow-hidden">
+                                <img src="${slot.preset.img}" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h4 class="font-jua text-lg text-amber-900">${slot.name} (${slot.preset.species})</h4>
+                                <p class="text-xs text-amber-700 font-bold">Lv.${slot.level || 1} • 경험치 ${slot.xp || 0} XP</p>
+                            </div>
+                        </div>
+                        <button onclick="confirmDeleteSave(${i})" class="p-2 text-stone-400 hover:text-red-500 transition">
+                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        </button>
+                    `;
+                } else {
+                    slotDiv.innerHTML = `
+                        <div class="flex items-center space-x-3 cursor-pointer flex-1" onclick="selectSaveSlot(${i})">
+                            <div class="w-10 h-10 rounded-full bg-stone-200 flex items-center justify-center text-stone-400 font-bold text-xs">
+                                빈 슬롯
+                            </div>
+                            <div>
+                                <h4 class="font-jua text-base text-stone-500">새로운 친구와 합숙하기</h4>
+                                <p class="text-xs text-stone-400">새로하기</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                container.appendChild(slotDiv);
+            }
+            lucide.createIcons();
+        }
+
+        function selectSaveSlot(index) {
+            currentSaveIndex = index;
+            const slotIndicator = document.getElementById('save-slot-indicator');
+            if (slotIndicator) slotIndicator.textContent = `슬롯 #${index + 1}`;
+
+            if (savesData[index]) {
+                loadHouseScreen();
+            } else {
+                currentPresetIdx = 0;
+                updatePresetCard();
+                showScreen('screen-char-select');
+            }
+        }
+
+        function confirmDeleteSave(index) {
+            showConfirmModal("정말 저장 데이터를 삭제하겠습니까?", () => {
+                savesData[index] = null;
+                saveToStorage();
+                renderSaveSlots();
+            });
+        }
+
+        function updatePresetCard() {
+            const preset = CHAR_PRESETS[currentPresetIdx];
+            document.getElementById('char-preset-img').src = preset.img;
+            document.getElementById('char-species-title').textContent = preset.species;
+            document.getElementById('char-name-input').value = '';
+            document.getElementById('name-error-msg').classList.add('hidden');
+        }
+
+        function prevCharPreset() {
+            currentPresetIdx = (currentPresetIdx - 1 + CHAR_PRESETS.length) % CHAR_PRESETS.length;
+            updatePresetCard();
+        }
+
+        function nextCharPreset() {
+            currentPresetIdx = (currentPresetIdx + 1) % CHAR_PRESETS.length;
+            updatePresetCard();
+        }
+
+        function confirmCharacterSelection() {
+            const nameInput = document.getElementById('char-name-input').value.trim();
+            const errorMsg = document.getElementById('name-error-msg');
+
+            if (!nameInput) {
+                errorMsg.textContent = "이름을 입력해 주세요!";
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            if (nameInput.length > 20) {
+                errorMsg.textContent = "이름은 최대 20자까지 가능합니다.";
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            // Check Duplicate Name across Save Slots and Global Dex
+            const isNameDuplicateInSaves = savesData.some((slot, idx) => slot && slot.name === nameInput && idx !== currentSaveIndex);
+            const isNameDuplicateInDex = globalDex.some(friend => friend.name === nameInput);
+
+            if (isNameDuplicateInSaves || isNameDuplicateInDex) {
+                errorMsg.textContent = "이미 존재하는 친구 이름입니다. 다른 이름을 입력해 주세요!";
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            // Random Trait Generation
+            const dreams = [
+                "청소년 마음 상담사", "아동 동화 작가", "식물원 가드너",
+                "따뜻한 찻집 주방장", "별자리 관측가", "마음 치유 음악가", "따스한 수채화 화가"
+            ];
+            const hobbies = [
+                "따뜻한 찻잔 모으기 및 화초 가꾸기", "밤하늘 바라보며 잔잔한 음악 듣기",
+                "포근한 목도리 뜨개질하기", "고요한 숲길 조용히 산책하기", "따뜻한 연필 드로잉", "향긋한 차 잎 말리기"
+            ];
+            const foods = [
+                "은은한 카모마일 차와 달콤한 비스킷", "진한 핫초코와 다정한 스콘",
+                "고소한 군고구마와 따뜻한 우유", "달콤한 딸기 타르트", "포근한 메밀차와 밤만두"
+            ];
+            const hates = [
+                "큰 소리로 날카롭게 다투는 분위기", "갑작스럽게 쿵쾅거리는 커다란 소음",
+                "서로에게 가시가 되는 무심한 말", "무례하게 상처 주는 행동", "너무 삭막하고 차가운 장소"
+            ];
+
+            const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+            // Create Save Data with randomized traits
+            savesData[currentSaveIndex] = {
+                id: Date.now(),
+                name: nameInput,
+                preset: CHAR_PRESETS[currentPresetIdx],
+                level: 1,
+                xp: 0,
+                traits: {
+                    dream: getRandomItem(dreams),
+                    hobby: getRandomItem(hobbies),
+                    food: getRandomItem(foods),
+                    hate: getRandomItem(hates)
+                },
+                dex: []
+            };
+            saveToStorage();
+
+            // Show Housemate Welcome Fanfare Modal
+            document.getElementById('welcome-char-img').src = CHAR_PRESETS[currentPresetIdx].img;
+            document.getElementById('welcome-char-name').textContent = nameInput;
+            openModal('modal-housemate-welcome');
+        }
+
+        function closeHousemateWelcomeModal() {
+            closeModal('modal-housemate-welcome');
+            loadHouseScreen();
+        }
+
+        function loadHouseScreen() {
+            const data = savesData[currentSaveIndex];
+            if (!data) return;
+
+            document.getElementById('active-char-name').textContent = data.name;
+            document.getElementById('active-char-level').textContent = `Lv.${data.level || 1}`;
+            document.getElementById('active-char-avatar-mini').src = data.preset.img;
+            document.getElementById('house-char-img').src = data.preset.img;
+            
+            // Set house character bubble to nickname
+            document.getElementById('house-status-bubble').textContent = data.name;
+
+            // Updated XP Bar for 500 XP goal (1 Evolution at 500 XP)
+            const maxXP = 500;
+            const pct = Math.min(100, Math.floor(((data.xp || 0) / maxXP) * 100));
+            document.getElementById('active-char-xp-bar').style.width = `${pct}%`;
+
+            showScreen('screen-house');
+        }
+
+        function startHouseIdleLoop() {
+            stopHouseIdleLoop();
+            const charContainer = document.getElementById('house-char-container');
+            const statusTop = document.getElementById('active-char-status');
+
+            // Strictly bounded coordinates inside room containers (positioned towards the lower area of each room block)
+            const activities = [
+                { room: '침실', status: '침대에서 따스하게 휴식하는 중... 🛌', top: '28%', left: '15%' },
+                { room: '화장실', status: '화초에 물을 주며 가꾸는 중... 🌿', top: '28%', left: '68%' },
+                { room: '거실', status: '소파에서 편안히 책 읽는 중... 📖', top: '72%', left: '15%' },
+                { room: '주방', status: '맛있는 차와 음식을 요리하는 중... 🍳', top: '72%', left: '68%' }
+            ];
+
+            let index = 0;
+            const applyActivity = (act) => {
+                if (charContainer) {
+                    // Trigger head sway animation while moving
+                    charContainer.classList.add('anim-sway-walk');
+                    charContainer.style.top = act.top;
+                    charContainer.style.left = act.left;
+
+                    setTimeout(() => {
+                        charContainer.classList.remove('anim-sway-walk');
+                    }, 700);
+                }
+                if (statusTop && activeVisitors.length === 0) statusTop.textContent = act.status;
+            };
+
+            applyActivity(activities[0]);
+
+            houseIdleTimer = setInterval(() => {
+                index = (index + 1) % activities.length;
+                applyActivity(activities[index]);
+            }, 8000);
+        }
+
+        function stopHouseIdleLoop() {
+            if (houseIdleTimer) {
+                clearInterval(houseIdleTimer);
+                houseIdleTimer = null;
+            }
+        }
+
+        function openCharInteractionMenu() {
+            const data = savesData[currentSaveIndex];
+            if (!data) return;
+            document.getElementById('menu-modal-avatar-img').src = data.preset.img;
+            document.getElementById('menu-modal-name').textContent = data.name;
+            openModal('modal-char-menu');
+        }
+
+        function startConversationFromMenu() {
+            closeModal('modal-char-menu');
+            sessionDialogueCount = 0;
+            currentChattingVisitor = null; // Main active housemate
+
+            const data = savesData[currentSaveIndex];
+            if (!data) return;
+
+            document.getElementById('chat-char-img').src = data.preset.img;
+            document.getElementById('drama-speaker-name').textContent = data.name;
+
+            // Initial emotion
+            set50EmotionMotion(EMOTIONS_DB.serenity, EMOTIONS_DB.focus);
+            showScreen('screen-chat');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            sessionDialogueCount++;
+
+            // Analyze sentiment with updated 50 emotions engine
+            const emotions = analyzeSentiment50(text);
+            set50EmotionMotion(emotions[0], emotions[1]);
+        }
+
+        function toggleChatSettingsMenu() {
+            const menu = document.getElementById('chat-settings-dropdown');
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        function stopConversation() {
+            // Wave farewell
+            set50EmotionMotion(EMOTIONS_DB.welcome, EMOTIONS_DB.gratitude);
+
+            setTimeout(() => {
+                // Earn XP ONLY when chatting with active housemate, NOT with independent visitors
+                if (!currentChattingVisitor) {
+                    const xpEarned = sessionDialogueCount * 2;
+                    const data = savesData[currentSaveIndex];
+
+                    if (data) {
+                        data.xp = (data.xp || 0) + xpEarned;
+                        saveToStorage();
+                    }
+
+                    document.getElementById('xp-gained-text').textContent = `대화 문장 ${sessionDialogueCount}개로 ${xpEarned} XP (문장당 2 XP)를 획득했습니다!`;
+                    openModal('modal-xp-gain');
+                } else {
+                    currentChattingVisitor = null;
+                    showScreen('screen-house');
+                }
+            }, 1000);
+        }
+
+        function finishXpModal() {
+            closeModal('modal-xp-gain');
+            checkLevelUpAndIndependence();
+        }
+
+        function checkLevelUpAndIndependence() {
+            const data = savesData[currentSaveIndex];
+            if (!data) {
+                loadHouseScreen();
+                return;
+            }
+
+            // Single evolution condition: 500 XP reach triggers graduation & independence
+            if (data.xp >= 500) {
+                data.level = 2; // Single evolution step
+                
+                const indepMsgs = [
+                    `"${data.name}은 당신과의 대화를 마음에 깊이 간직하게 되었습니다. 500 XP를 달성하여 멋지게 독립생으로 앨범에 남아 세상으로 나아갑니다."`,
+                    `"${data.name}은 당신과 나눈 다정한 이야기 덕분에 마음이 한층 단단해졌습니다. 이제 훌륭한 독립생으로 졸업합니다."`,
+                    `"당신이 들어준 수많은 이야기들이 ${data.name}의 성장에 밑거름이 되었습니다. 독립생 앨범에서 언제든 다시 추억해 주세요!"`
+                ];
+                const selectedMsg = indepMsgs[Math.floor(Math.random() * indepMsgs.length)];
+
+                // Add to Global Independence Dex / Album
+                globalDex.push({
+                    id: Date.now(),
+                    name: data.name,
+                    preset: data.preset,
+                    traits: data.traits,
+                    date: new Date().toLocaleDateString()
+                });
+
+                document.getElementById('independence-desc').textContent = selectedMsg;
+                saveToStorage();
+                openModal('modal-independence');
+            } else {
+                loadHouseScreen();
+            }
+        }
+
+        function startNewFriendAfterIndependence() {
+            closeModal('modal-independence');
+            savesData[currentSaveIndex] = null;
+            saveToStorage();
+            showScreen('screen-char-select');
+        }
+
+        function openProfileDetailsModal() {
+            closeModal('modal-char-menu');
+            const data = savesData[currentSaveIndex];
+            if (!data) return;
+
+            document.getElementById('profile-modal-title').textContent = `${data.name}의 프로필`;
+            showProfileTab('dream');
+            openModal('modal-profile');
+        }
+
+        function showProfileTab(tabKey) {
+            const data = savesData[currentSaveIndex];
+            const contentBox = document.getElementById('profile-tab-content');
+            if (!contentBox || !data) return;
+
+            const charName = data.name;
+
+            // Default fallback if legacy save data lacks traits
+            const traits = data.traits || {
+                dream: "청소년 마음 상담사",
+                hobby: "따뜻한 찻잔 모으기 및 화초 가꾸기",
+                food: "은은한 카모마일 차와 달콤한 비스킷",
+                hate: "큰 소리로 날카롭게 다투는 분위기"
+            };
+
+            const profiles = {
+                dream: `🌟 <strong>꿈과 진로:</strong> ${traits.dream}<br><br><span class="text-xs text-stone-600">${charName}은(는) 말없이 곁을 지켜준 당신의 온기 덕분에, 타인의 아픔을 마음 깊이 감싸주는 ${traits.dream}(이)가 되고 싶어졌어요.</span>`,
+                hobby: `🎨 <strong>취미:</strong> ${traits.hobby}<br><br><span class="text-xs text-stone-600">고요한 자기만의 시간 속에서 ${traits.hobby}(을)를 하며 마음을 살포시 정돈하곤 해요.</span>`,
+                food: `🍵 <strong>좋아하는 음식:</strong> ${traits.food}<br><br><span class="text-xs text-stone-600">${traits.food}(은)는 굳어 있던 몸과 마음을 부드럽고 녹여주는 소중한 간식이에요.</span>`,
+                hate: `⚡ <strong>싫어하는 것:</strong> ${traits.hate}<br><br><span class="text-xs text-stone-600">${traits.hate}(은)는 마음을 아프게 해서 피하고 싶어 하며 언제나 차분한 평화를 바라고 있답니다.</span>`
+            };
+
+            contentBox.innerHTML = profiles[tabKey] || profiles['dream'];
+        }
+
+        function openDexModal() {
+            renderDexList();
+            openModal('modal-dex');
+        }
+
+        function renderDexList() {
+            const container = document.getElementById('dex-list-container');
+            const query = (document.getElementById('dex-search-input')?.value || '').toLowerCase();
+            if (!container) return;
+
+            container.innerHTML = '';
+            const filtered = globalDex.filter(item => item.name.toLowerCase().includes(query));
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="text-center text-xs text-stone-400 py-8">아직 독립(졸업)한 친구가 없거나 검색 결과가 없습니다.<br>(경험치 500 XP 달성 시 앨범에 등록됩니다)</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const isAlreadyVisiting = activeVisitors.some(v => v.name === item.name);
+                const div = document.createElement('div');
+                div.className = "p-3 bg-amber-50 rounded-2xl border border-amber-200 flex items-center justify-between";
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-full bg-amber-200 border border-amber-300 overflow-hidden shadow-xs">
+                            <img src="${item.preset.img}" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h5 class="font-jua text-base text-amber-900">${item.name} (${item.preset.species}) <span class="text-xs bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded-full font-bold">독립생</span></h5>
+                            <p class="text-[11px] text-stone-500">꿈: ${item.traits?.dream || '상담사'} • 독립일: ${item.date}</p>
+                        </div>
+                    </div>
+                    <button onclick="inviteFriendFromDex('${item.name}')" ${isAlreadyVisiting ? 'disabled' : ''} class="px-3 py-1.5 ${isAlreadyVisiting ? 'bg-stone-300 text-stone-500 cursor-not-allowed' : 'bg-amber-600 hover:bg-amber-700 text-white'} font-jua text-xs rounded-xl shadow transition">
+                        ${isAlreadyVisiting ? '놀러오는 중' : '초대하기'}
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function inviteFriendFromDex(friendName) {
+            if (activeVisitors.length >= 3) {
+                alert("⚠️ 합숙집에 놀러온 독립생 친구는 동시에 최대 3명까지만 함께할 수 있어요!");
+                return;
+            }
+
+            const friend = globalDex.find(item => item.name === friendName);
+            if (!friend) return;
+
+            if (activeVisitors.some(v => v.name === friendName)) {
+                alert(` 이미 [${friendName}] 친구가 합숙집에 놀러와 있습니다.`);
+                return;
+            }
+
+            closeModal('modal-dex');
+
+            // Register visitor
+            activeVisitors.push(friend);
+            renderVisitorCharacters();
+
+            const statusTop = document.getElementById('active-char-status');
+            if (statusTop) statusTop.textContent = `🎉 독립생 ${friend.name}이(가) 합숙집에 놀러 왔습니다! (현재 ${activeVisitors.length}/3명)`;
+
+            alert(`✨ 독립한 친구 [${friend.name}]이(가) 반갑게 수락하여 합숙집에 놀러 왔어요!`);
+
+            // Set random departure timer (15~40 seconds)
+            const stayDuration = Math.floor(Math.random() * 25000) + 15000;
+            visitorTimers[friend.name] = setTimeout(() => {
+                friendLeavesHouse(friend.name);
+            }, stayDuration);
+        }
+
+        function renderVisitorCharacters() {
+            const container = document.getElementById('dex-visitors-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const presetPositions = [
+                { top: '68%', left: '42%' },
+                { top: '30%', left: '40%' },
+                { top: '70%', left: '78%' }
+            ];
+
+            activeVisitors.forEach((visitor, idx) => {
+                const pos = presetPositions[idx % presetPositions.length];
+                const visitorEl = document.createElement('div');
+                visitorEl.id = `visitor-char-${visitor.name}`;
+                visitorEl.className = 'absolute pointer-events-auto cursor-pointer transition-all duration-700 ease-in-out flex flex-col items-center group z-30 animate-float';
+                visitorEl.style.top = pos.top;
+                visitorEl.style.left = pos.left;
+
+                // Clicking invited independent friends opens their interaction menu (dialogue & profile)
+                visitorEl.onclick = () => {
+                    openVisitorInteractionMenu(visitor);
+                };
+
+                visitorEl.innerHTML = `
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-amber-100 border-3 border-amber-500 shadow-2xl flex items-center justify-center relative overflow-hidden">
+                        <img src="${visitor.preset.img}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="mt-1 whitespace-nowrap bg-amber-600 text-white px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold shadow-md">
+                        🎓 ${visitor.name}
+                    </div>
+                `;
+                container.appendChild(visitorEl);
+            });
+        }
+
+        function openVisitorInteractionMenu(visitor) {
+            document.getElementById('menu-modal-avatar-img').src = visitor.preset.img;
+            document.getElementById('menu-modal-name').textContent = `${visitor.name} (독립생)`;
+
+            // Override click handlers in menu for visitor context
+            const dialogBtn = document.querySelector('#modal-char-menu button[onclick="startConversationFromMenu()"]');
+            const profileBtn = document.querySelector('#modal-char-menu button[onclick="openProfileDetailsModal()"]');
+
+            if (dialogBtn) {
+                dialogBtn.onclick = () => {
+                    closeModal('modal-char-menu');
+                    sessionDialogueCount = 0;
+                    currentChattingVisitor = visitor; // Track that we are chatting with an independent visitor
+                    document.getElementById('chat-char-img').src = visitor.preset.img;
+                    document.getElementById('drama-speaker-name').textContent = `${visitor.name} (독립생)`;
+                    set50EmotionMotion(EMOTIONS_DB.serenity, EMOTIONS_DB.focus);
+                    showScreen('screen-chat');
+                };
+            }
+
+            if (profileBtn) {
+                profileBtn.onclick = () => {
+                    closeModal('modal-char-menu');
+                    document.getElementById('profile-modal-title').textContent = `${visitor.name}의 프로필`;
+                    const contentBox = document.getElementById('profile-tab-content');
+                    const traits = visitor.traits || {};
+                    contentBox.innerHTML = `🎓 <strong>독립생 프로필</strong><br><br>🌟 꿈: ${traits.dream || '상담사'}<br>🎨 취미: ${traits.hobby || '음악 감상'}<br>🍵 좋아하는 음식: ${traits.food || '카모마일 차'}<br>⚡ 싫어하는 것: ${traits.hate || '소음'}`;
+                    openModal('modal-profile');
+                };
+            }
+
+            openModal('modal-char-menu');
+        }
+
+        function friendLeavesHouse(friendName) {
+            const index = activeVisitors.findIndex(v => v.name === friendName);
+            if (index !== -1) {
+                activeVisitors.splice(index, 1);
+                renderVisitorCharacters();
+
+                const farewellaMsgs = [
+                    `"즐거운 시간이었어요! 다음에 또 만나요 👋"`,
+                    `"잠시 놀러 와서 마음이 따뜻해졌어요. 전 이만 돌아갈게요!"`,
+                    `"반가웠어요! 앨범 도감에서 언제든 다시 불러주세요 ✨"`
+                ];
+                const selectedMsg = farewellaMsgs[Math.floor(Math.random() * farewellaMsgs.length)];
+
+                // If currently chatting with this leaving friend, automatically close dialogue screen and return to house
+                if (currentChattingVisitor && currentChattingVisitor.name === friendName) {
+                    currentChattingVisitor = null;
+                    showScreen('screen-house');
+                }
+
+                alert(`👋 [독립생 ${friendName}의 작별 인사]\n${selectedMsg}`);
+
+                const statusTop = document.getElementById('active-char-status');
+                if (statusTop) {
+                    if (activeVisitors.length > 0) {
+                        statusTop.textContent = `🎓 독립생 ${activeVisitors.length}명이 합숙집에 함께하는 중입니다.`;
+                    } else {
+                        statusTop.textContent = `거실 소파에서 쉬는 중...`;
+                    }
+                }
+            }
+            if (visitorTimers[friendName]) {
+                clearTimeout(visitorTimers[friendName]);
+                delete visitorTimers[friendName];
+            }
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function showConfirmModal(title, onYes) {
+            document.getElementById('confirm-title').textContent = "확인";
+            document.getElementById('confirm-msg').textContent = title;
+
+            const yesBtn = document.getElementById('confirm-yes-btn');
+            const noBtn = document.getElementById('confirm-no-btn');
+
+            const handleYes = () => {
+                onYes();
+                closeModal('modal-confirm');
+                yesBtn.removeEventListener('click', handleYes);
+            };
+
+            const handleNo = () => {
+                closeModal('modal-confirm');
+                noBtn.removeEventListener('click', handleNo);
+            };
+
+            yesBtn.addEventListener('click', handleYes);
+            noBtn.addEventListener('click', handleNo);
+            openModal('modal-confirm');
+        }
+
+        function confirmExitToTitle() {
+            showConfirmModal("메인 시작 화면으로 돌아가시겠습니까?", () => {
+                showScreen('screen-title');
+            });
+        }
+    </script>
+</body>
+</html>
